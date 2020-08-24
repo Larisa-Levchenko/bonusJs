@@ -1,3 +1,20 @@
 .registerUser{
-    padding: 20px 5px;
+    padding: 20px 10px;
+}
+.authorization{
+    padding: 20px 10px;
+    margin-left: 50px;
+}
+.block{
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+}
+.removeBtn{
+    width: 25px;
+    height: 25px;
+    margin-left: 10px;
+    background: #fff url("../img/delete.svg") ;
+    background-size: cover;
+    border: 0;
 }

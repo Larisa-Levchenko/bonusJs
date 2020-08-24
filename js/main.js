@@ -1,24 +1,28 @@
 'use strict';
-const registerUser = document.querySelector('.registerUser');
-const container = document.querySelector('.container');
 
-let userDate=[];
+const registerUser = document.querySelector('.registerUser');
+const authorization = document.querySelector('.authorization');
+const container = document.querySelector('.container');
+const nameUser = document.querySelector('.name');
+
+
+let userDate = [];
 
 const getZero = function (n) {
-    if(n<10){
+    if (n < 10) {
         return `0${n}`;
-    }else{
+    } else {
         return n;
     }
 };
 
-const getMonth = function(n, str){
-    if(n!==3 && n!==8){        
-      return str.substring(0,str.length-1)+'я';
-    }else{
-        
-        return str+'a';
-    }    
+const getMonth = function (n, str) {
+    if (n !== 3 && n !== 8) {
+        return str.substring(0, str.length - 1) + 'я';
+    } else {
+
+        return str + 'a';
+    }
 };
 
 const getDate = function () {
@@ -32,11 +36,12 @@ const getDate = function () {
 
     let hour = date.getHours();
     let minute = date.getMinutes();
-    let sec = date.getSeconds();    
-   
+    let sec = date.getSeconds();
+
     return `${getZero(day)} ${getMonth(month,longMonth)} ${year} г., ${getZero(hour)}:${getZero(minute)}:${getZero(sec)}`;
 
 };
+
 const checkUser = function (str) {
     let numSpace = 0;
     if (str === null || str === undefined) {
@@ -51,15 +56,29 @@ const checkUser = function (str) {
         return true;
     }
 };
+
 const render = function () {
+    container.textContent = '';
+    let json = JSON.stringify(userDate);
+    localStorage.users = json;
     userDate.forEach(function (item) {
-            const li = document.createElement('li');
-            li.textContent = `Имя: ${item.firstName}, фамилия: ${item.lastName}, зарегистрирован: ${item.regDate}`;
-            container.append(li);
-        }
-    );
+        const li = document.createElement('li');
+        li.innerHTML = '<div class="block">' +
+            '<span>' + `Имя: ${item.firstName}, фамилия: ${item.lastName}, зарегистрирован: ${item.regDate}` +
+            '</span>' + '<button class="removeBtn"></button>' +
+            '</div>';
+        container.append(li);
+        const removeBtn = li.querySelector('.removeBtn');
+
+        removeBtn.addEventListener('click', function () {
+            userDate.splice(userDate.indexOf(item), 1);
+            render();
+        });
+
+    });
 };
-registerUser.addEventListener('click', function(){
+
+registerUser.addEventListener('click', function () {
     let user,
         log,
         pass;
@@ -79,19 +98,29 @@ registerUser.addEventListener('click', function(){
     };
 
     userDate.push(newDate);
-    let json = JSON.stringify(userDate);
-    localStorage.users = json;
     render();
 });
 
+authorization.addEventListener('click', function () {
+    let log = prompt('Введите логин');
+    let pass = prompt('Введите пароль');
+    let tmp = false;
+    userDate.forEach(function (item) {
+        if (item.login === log) {
+            if (item.password === pass) {
+                nameUser.textContent = item.firstName;
+                tmp = true;
+            }
+        }
+
+    });
+    if (tmp === false) {
+        alert('Пользователь не найден');
+    }
+
+});
 
 if (localStorage.users !== undefined) {
     userDate = JSON.parse(localStorage.users);
     render();
 }
-
-
-
-
-
-
